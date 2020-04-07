@@ -1,15 +1,15 @@
-FROM node:latest
-MAINTAINER Hongcai Deng <admin@dhchouse.com>
+FROM node:current-slim
+MAINTAINER Hongcai Deng <admin@dhchouse.com>,xzl2021 <xzl2021#hotmail.com>
 
-RUN apt-get clean all
-RUN apt-get update
-RUN apt-get -y install git
-RUN git clone https://github.com/denghongcai/forsaken-mail.git /forsaken-mail
-
-WORKDIR /forsaken-mail
-
-RUN npm install
+RUN apt-get update \
+  && apt-get -y install git \
+  && git clone https://github.com/denghongcai/forsaken-mail.git /forsaken-mail \
+  && apt-get purge git \
+  && apt-get autoremove \
+  && apt-get clean all \
+  && cd /forsaken-mail \
+  && npm install
 
 EXPOSE 25
 EXPOSE 3000
-CMD npm start
+CMD ["npm start"]
