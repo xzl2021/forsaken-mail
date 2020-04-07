@@ -1,15 +1,13 @@
-FROM node:current-slim
+FROM alpine:latest
 MAINTAINER Hongcai Deng <admin@dhchouse.com>,xzl2021 <xzl2021#hotmail.com>
 
-RUN apt-get update \
-  && apt-get -y install git \
+RUN  apk add --no-cache --virtual .build-deps git npm \
   && git clone https://github.com/denghongcai/forsaken-mail.git /forsaken-mail \
-  && apt-get purge git \
-  && apt-get autoremove \
-  && apt-get clean all \
   && cd /forsaken-mail \
-  && npm install
+  && npm install \
+  && apk del .build-deps \
+  && apk add --no-cache nodejs
 
 EXPOSE 25
 EXPOSE 3000
-CMD ["npm start"]
+CMD ["node /forsaken-mail/bin/www"]
